@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Aihara\Http;
 
 use Aihara\View;
-
+use function apache_response_headers;
 class Response {
 
     private $headers = [];
