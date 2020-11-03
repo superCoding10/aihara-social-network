@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database;
+namespace Aihara\Database;
 
 use PDO;
 use Throwable;

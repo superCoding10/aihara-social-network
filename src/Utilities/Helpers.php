@@ -1,9 +1,10 @@
 <?php
 
-use App\Server\Env;
-use App\Http\Request;
-use App\Http\Response;
-
+use Aihara\Server\Env;
+use Aihara\Server\Csrf;
+use Aihara\Http\Request;
+use Aihara\Http\Response;
+use Aihara\Routing\RouterManager;
 
 function dd($value) {
     echo '<code>';
@@ -45,4 +46,38 @@ function session($name = null, $value = null, $removeAfterReload = false) {
     }
 
     return $session;
+}
+
+function makeCsrf() {
+    return Csrf::makeToken();
+}
+
+function getCsrf() {
+    return Csrf::getToken();
+}
+
+
+function url($part = null) {
+    switch ($part) {
+        case 'protocol':
+            return $_SERVER['REQUEST_SCHEME'];
+        case 'scheme':
+            return $_SERVER['REQUEST_SCHEME'] . '://';
+        case 'host':
+            return $_SERVER['HTTP_HOST'];
+        case 'domain':
+            return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        case 'uri':
+            return $_SERVER['REQUEST_URI'];
+        case 'path':
+            return explode('?', $_SERVER['REQUEST_URI'])[0];
+        case 'query':
+            return $_SERVER['QUERY_STRING'];
+        default:
+            return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    }
+}
+
+function router($name) {
+    return RouterManager::getName($name);
 }

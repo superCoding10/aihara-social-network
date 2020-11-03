@@ -1,40 +1,39 @@
 <?php
 
-namespace App;
+namespace Aihara;
 
-use App\Database\DB;
-use App\Middleware\Middleware;
-use App\Routing\Router;
+use Aihara\Database\DB;
+use Aihara\Middleware\Middleware;
+use Aihara\Routing\Router;
 use PDO;
 
 class App {
     public static function start() {
-        // if(!session_id()) {
-        //     session_start();
-        // }
+        if(!session_id()) {
+            session_start();
+        }
 
 
 
-        // setcookie('z', 'y');
 
         // if(empty(session('csrf_token'))) {
-        //     session('csrf_token', bin2hex(random_bytes(32)));
+            
         // }
 
 
-        // foreach($_SESSION as $name => $value) {
-        //     if(isset($_SESSION[$name]['removeAfterReload']) && $_SESSION[$name]['removeAfterReload']) {
-        //         unset($_SESSION[$name]);
-        //     }
-        // }
+        foreach($_SESSION as $name => $value) {
+            if(isset($_SESSION[$name]['removeAfterReload']) && $_SESSION[$name]['removeAfterReload']) {
+                unset($_SESSION[$name]);
+            }
+        }
 
-        // require INC_ROOT . '/route/Router.php';
+        require INC_ROOT . '/route/Router.php';
         
         // Middleware::start();
-        // Router::terminate();
+        Router::terminate();
 
 
-        // DB::connection([PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ]);
+        DB::connection([PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ]);
 
 
 

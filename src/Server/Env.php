@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Server;
+namespace Aihara\Server;
 
 
 class Env {

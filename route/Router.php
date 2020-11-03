@@ -1,26 +1,23 @@
 <?php
+use Aihara\Routing\Router;
 
-use App\Routing\Router;
-
-dd($_COOKIE);
-dd(session());
-Router::post('/', function() {
-});
 Router::get('/', function() {
-    
+    response()->view('welcome', ['title' => 'Aihara social network']);
 });
 
 // namespace route;
 Router::get('/register', function() {
-    
-});
+    response()->view('auth/register', ['title' => 'Регистрация']);
+})->name('register')->middleware('csrf');
+
 Router::post('/register', function() {
+    // echo 'register post';
+})->middleware('csrf');
 
-})->add('csrf');
+// Router::get('/login', function() {
+//     response()->view('auth/login');
+// })->name('login')->middleware('csrf');
 
-Router::get('/login', function() {
-
-});
 Router::post('/login', function() {
 
 });

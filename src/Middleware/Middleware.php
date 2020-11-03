@@ -1,25 +1,22 @@
 <?php
 
-namespace App\Middleware;
+namespace Aihara\Middleware;
 
 class Middleware {
     
-    private static $middlewares = [];
+    private $middlewares = [];
     
-    public static function add(string $middlewareClassName)
+    public function __construct(string $middlewares)
     {
         # code...
-        
-        foreach(explode('|', $middlewareClassName) as $middleware) {
-            self::$middlewares[] = $middleware;
-        }
+        $this->middlewares = array_filter(explode('|', $middlewares));
 
     }
 
-    public static function start() {
-        foreach(self::$middlewares as $middleware) {
-                require_once INC_ROOT . '/application/Middleware/' . $middleware . '.php';
-                (new $middleware())->handle();
+    public function handle() {
+        foreach($this->middlewares as $middleware) {
+            $className = '\App\Middleware\\' . $middleware;
+            (new $className)->handle();
         }
     }
 

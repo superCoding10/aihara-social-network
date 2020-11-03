@@ -1,22 +1,31 @@
 <?php
 
-namespace App\Routing;
+namespace Aihara\Routing;
 
 use InvalidArgumentException;
-use App\Middleware\MiddlewareManager;
-
+use Aihara\Middleware\MiddlewareManager;
+use Aihara\Routing\RouterManager;
 
 class Router {
 
     static protected $path;
-
+    static private $callback;
+    static private $placeholders;
+    static protected $method;
     static function terminate()
     {
         // if(in_array())
         if(!self::$path) {
            require '../resources/view/404.php';
+           return;
         }
+
+        $cb = self::$callback;
+        $cb(...self::$placeholders);
+
     }
+
+
 
     static public function get($pattern, $callback) 
     {
@@ -45,13 +54,15 @@ class Router {
         }
         $pattern = '/' . implode('/', $exploded_pattern);
         $path = '/' . implode('/', $exploded_path);
+        $result = 'false';
         if($path === $pattern && $_SERVER['REQUEST_METHOD'] === strtoupper(__FUNCTION__)) {
             self::$path = $pattern;
-            $callback(...$placeholders);
+            self::$callback = $callback;
+            self::$placeholders = $placeholders;
+            $result = 'true';
         }
-        // echo 
+        return new RouterManager($pattern, $result);
 
-        return new MiddlewareManager($oldPattern);
     }
 
 
@@ -84,12 +95,15 @@ class Router {
         }
         $pattern = '/' . implode('/', $exploded_pattern);
         $path = '/' . implode('/', $exploded_path);
+        $result = 'false';
         if($path === $pattern && $_SERVER['REQUEST_METHOD'] === strtoupper(__FUNCTION__)) {
             self::$path = $pattern;
-            $callback(...$placeholders);
+            self::$callback = $callback;
+            self::$placeholders = $placeholders;
+            $result = 'true';
         }
         // echo 
-        return new MiddlewareManager($oldPattern);
+        return new RouterManager($pattern, $result);
 
     }
 }

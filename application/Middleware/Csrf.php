@@ -1,9 +1,10 @@
 <?php
-
+namespace App\Middleware;
 class Csrf {
     public function handle()
     {
         # code...
+        echo 'csrf';
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             if(empty(request()->post('csrf_token'))) {
                 echo '<h3 style="color: red;">Seem like you have forgotten to include your csrf token in your form</h3>';

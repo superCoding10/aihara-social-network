@@ -1,16 +1,12 @@
 <?php
-
-
-
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: *');
-header('Access-Control-Allow-Credentials: true');
-use App\App;
-header('Set-Cookie: key=value;SameSite=strict;Secure');
-var_dump($_COOKIE);
 ini_set('display_errors', 'On');
 define('INC_ROOT', dirname(__DIR__));
 
 require INC_ROOT . '/vendor/autoload.php';
+
+use Aihara\App;
+
+// echo __NAMESPACE__;
+
 
 App::start();
