@@ -10,7 +10,11 @@ class Response {
     private $headers = [];
 
     public function __construct() {
-        $this->headers = apache_response_headers();
+        if(function_exists('apache_response_headers')) {
+            $this->headers = apache_response_headers();
+        } else {
+            $this->headers = headers_list();
+        }
     }
 
     public function header(?string $name = null, ?string $value = null, ?int $code = 200)
