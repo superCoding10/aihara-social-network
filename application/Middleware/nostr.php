@@ -1,10 +1,10 @@
 <?php
 namespace App\Middleware;
-class Md {
+class nostr {
     public function handle()
     {
         # code...
-        echo 'Md';
+        echo 'nostr';
         
         
     }

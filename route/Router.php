@@ -8,11 +8,11 @@ Router::get('/', function() {
 // namespace route;
 Router::get('/register', function() {
     response()->view('auth/register', ['title' => 'Регистрация']);
-})->name('register')->middleware('csrf');
+})->name('register')->middleware('nostr');
 
 Router::post('/register', function() {
     // echo 'register post';
-})->middleware('csrf');
+});
 
 // Router::get('/login', function() {
 //     response()->view('auth/login');
