@@ -8,7 +8,7 @@ Router::get('/', function() {
 // namespace route;
 Router::get('/register', function() {
     response()->view('auth/register', ['title' => 'Регистрация']);
-})->name('register')->middleware('nostr');
+})->name('register')->middleware('csrf');
 
 Router::post('/register', function() {
     // echo 'register post';
