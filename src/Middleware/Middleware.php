@@ -15,7 +15,7 @@ class Middleware {
 
     public function handle() {
         foreach($this->middlewares as $middleware) {
-            $className = '\App\Middleware\\' . $middleware;
+            $className = '\\App\\Middleware\\' . $middleware;
             (new $className)->handle();
         }
     }
