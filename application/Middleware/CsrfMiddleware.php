@@ -1,6 +1,6 @@
 <?php
 namespace App\Middleware;
-class Csrf {
+class CsrfMiddleware {
     public function handle()
     {
         # code...
