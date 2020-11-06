@@ -11,7 +11,6 @@ class Router {
     static protected $path;
     static private $callback;
     static private $placeholders;
-    static protected $method;
     static function terminate()
     {
         // if(in_array())
@@ -54,14 +53,14 @@ class Router {
         }
         $pattern = '/' . implode('/', $exploded_pattern);
         $path = '/' . implode('/', $exploded_path);
-        $result = 'false';
+        // $result = 'false';
         if($path === $pattern && $_SERVER['REQUEST_METHOD'] === strtoupper(__FUNCTION__)) {
             self::$path = $pattern;
             self::$callback = $callback;
             self::$placeholders = $placeholders;
-            $result = 'true';
+            // $result = 'true';
         }
-        return new RouterManager($pattern, $result);
+        return new RouterManager($pattern, __FUNCTION__);
 
     }
 
@@ -95,15 +94,15 @@ class Router {
         }
         $pattern = '/' . implode('/', $exploded_pattern);
         $path = '/' . implode('/', $exploded_path);
-        $result = 'false';
+        // $result = 'false';
         if($path === $pattern && $_SERVER['REQUEST_METHOD'] === strtoupper(__FUNCTION__)) {
             self::$path = $pattern;
             self::$callback = $callback;
             self::$placeholders = $placeholders;
-            $result = 'true';
+            // $result = 'true';
         }
         // echo 
-        return new RouterManager($pattern, $result);
+        return new RouterManager($pattern, __FUNCTION__);
 
     }
 }

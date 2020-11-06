@@ -1,5 +1,6 @@
 <?php
 
+use Aihara\Config;
 use Aihara\Server\Env;
 use Aihara\Server\Csrf;
 use Aihara\Http\Request;
@@ -24,28 +25,170 @@ function env($name) {
     return Env::get($name);
 }
 
+
+function removeTmpValues(&$arr) {
+    foreach($arr as $key => &$value) {
+        if(is_array($value)) {
+            removeTmpValues($value);
+        }
+        if($key[0] === '!') {
+            unset($arr[$key]);
+        }
+    }
+}
+
+function filterSession() {
+    filterTmpValuesFromSession($_SESSION);
+    filterTmpValuesFromSession($_SESSION);
+}
+
+function filterTmpValuesFromSession(&$arr) {
+    $arr = array_filter($arr);
+    foreach($arr as $key => &$value) {
+        if(is_array($value)) {
+            filterTmpValuesFromSession($value);
+        }
+    }
+}
+
+
+
 function session($name = null, $value = null, $removeAfterReload = false) {
-    if($name && ! is_null($value)) {
-        if(! is_bool($removeAfterReload)) {
-            throw new InvalidArgumentException('Argument 3 expected to be of type boolean; provided ' . gettype($removeAfterReload));
+
+        $parts = explode('.', $name);
+        switch (count($parts)) {
+            case 1:
+                if(!is_null($name) && !is_null($value)) {
+                    if($value === '') {
+                        unset($_SESSION[$parts[0]]);
+                        return true;
+                    }
+                    $session = $_SESSION;
+                    $session[$removeAfterReload ? '!' . $parts[0] : $parts[0]] = $value;
+                    $_SESSION = $session;
+                } else if(!is_null($name)) {
+                    if(isset($_SESSION[$parts[0]])) {
+                        return $_SESSION[$parts[0]];
+                    } else if( $_SESSION['!' . $parts[0]]) {
+                        return $_SESSION['!' . $parts[0]];
+                    } else {
+                        return false;
+                    }
+                }
+
+            break;
+            case 2:
+                # code...
+                if(!is_null($name) && !is_null($value)) {
+                    if($value === '') {
+                        unset($_SESSION[$parts[0]][$parts[1]]);
+                        return true;
+                    }
+                    $session = $_SESSION;
+                    $session[$parts[0]][$removeAfterReload ? '!' . $parts[1] : $parts[1]] = $value;;
+                    $_SESSION = $session;
+                } else if(!is_null($name)) {
+                    if(isset($_SESSION[$parts[0]][$parts[1]])) {
+                        return $_SESSION[$parts[0]][$parts[1]];
+                    } else if(isset($_SESSION[$parts[0]]['!' . $parts[1]])) {
+                        return $_SESSION[ $parts[0]]['!' . $parts[1]];
+                    } else {
+                        return false;
+                    }
+                }
+
+            break;
+            case 3:
+                # code...
+                if(!is_null($name) && !is_null($value)) {
+                    if($value === '') {
+                        unset($_SESSION[$parts[0]][$parts[1]][$parts[2]]);
+                        return true;
+                    }
+                    $session = $_SESSION;
+                    $session[$parts[0]][$parts[1]][$removeAfterReload ? '!' . $parts[2] : $parts[2]] = $value;
+                    $_SESSION = $session;
+                } else if(!is_null($name)) {
+                    // if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]])) {
+                    //     return $_SESSION[$parts[0]][$parts[1]][$parts[2]];
+                    // } else {
+                    //     return false;
+                    // }
+                    if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]])) {
+                        return $_SESSION[$parts[0]][$parts[1]][$parts[2]];
+                    } else if(isset($_SESSION[$parts[0]][$parts[1]]['!' . $parts[2]])) {
+                        return $_SESSION[ $parts[0]][$parts[1]]['!' . $parts[2]];
+                    } else {
+                        return false;
+                    }
+                }
+            break;
+            case 4:
+                if(!is_null($name) && !is_null($value)) {
+                    if($value === '') {
+                        unset($_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]]);
+                        return true;
+                    }
+                    $session = $_SESSION;
+                    $session[$parts[0]][$parts[1]][$parts[2]][$removeAfterReload ? '!' . $parts[3] : $parts[3]] = $value;
+                    $_SESSION = $session;
+                } else if(!is_null($name)) {
+                    // if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]])) {
+                    //     return $_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]];
+                    // } else {
+                    //     return false;
+                    // }
+                    if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]])) {
+                        return $_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]];
+                    } else if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]]['!' . $parts[3]])) {
+                        return $_SESSION[ $parts[0]][$parts[1]][$parts[2]]['!' . $parts[3]];
+                    } else {
+                        return false;
+                    }
+                }
+            break;
+            case 5:
+                # code...
+                if(!is_null($name) && !is_null($value)) {
+                    if($value === '') {
+                        unset($_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]][$parts[4]]);
+                        return true;
+                    }
+                    $session = $_SESSION;
+                    $session[$parts[0]][$parts[1]][$parts[2]][$parts[3]][$removeAfterReload ? '!' . $parts[4] : $parts[4]] = $value;
+                    $_SESSION = $session;
+                } else if(!is_null($name)) {
+                    // if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]][$parts[4]])) {
+                    //     return $_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]][$parts[4]];
+                    // } else {
+                    //     return false;
+                    // }
+                    if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]][$parts[4]])) {
+                        return $_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]][$parts[4]];
+                    } else if(isset($_SESSION[$parts[0]][$parts[1]][$parts[2]][$parts[3]]['!' . $parts[4]])) {
+                        return $_SESSION[ $parts[0]][$parts[1]][$parts[2]][$parts[3]]['!' . $parts[4]];
+                    } else {
+                        return false;
+                    }
+                }
+            break;
+            default:
+                throw new InvalidArgumentException('Too deep key');
         }
-        $_SESSION[$name] = ['value' => $value, 'removeAfterReload' => $removeAfterReload];
-    } else if($name) {
-        if(isset($_SESSION[$name])) {
-            return $_SESSION[$name]['value'];
+
+        if(is_null($name) && is_null($value)) {
+            // $_SESSION = format($_SESSION);
+            return $_SESSION;
         }
-        return false;
+
+
+}
+
+function input($name) {
+    if(isset($_SESSION['input'][$name])) {
+        return $_SESSION['input'][$name];
     }
-
-    $session = $_SESSION;
-
-    foreach($session as $name => $value) {
-        if(isset($session[$name]['removeAfterReload'])) {
-            $session[$name] = $session[$name]['value'];
-        }
-    }
-
-    return $session;
+    return false;
 }
 
 function makeCsrf() {
@@ -81,3 +224,7 @@ function url($part = null) {
 function router($name) {
     return RouterManager::getName($name);
 }
+function config($name) {
+    return Config::get($name);
+}
+

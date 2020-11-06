@@ -7,14 +7,14 @@ class RouterManager extends Router {
 
     private $currentPage;
     private static $names = [];
-
+    private $method;
     public static function getName($name) {
         return isset(self::$names[$name]) ? self::$names[$name] : false;
     }
 
-    public function __construct($currentPage, $result) {
+    public function __construct($currentPage, $method) {
         $this->currentPage = $currentPage;
-        $this->result = $result;
+        $this->method = strtoupper($method);
     }
 
 
@@ -22,10 +22,10 @@ class RouterManager extends Router {
     {
         # code...
         // echo Router::$method;
-        if($this->currentPage === url('path') && $this->result === 'true') {
+        if($this->currentPage === url('path') && $this->method === $_SERVER['REQUEST_METHOD']) {
             (new Middleware($middleware))->handle();
         }
-        return new RouterManager($this->currentPage, $this->result);
+        return new RouterManager($this->currentPage, $this->method);
     }
 
     public function name($name)
@@ -35,6 +35,6 @@ class RouterManager extends Router {
 
 
         self::$names[$name] = url('domain') . '/' . $name;
-        return new RouterManager($this->currentPage, $this->result);
+        return new RouterManager($this->currentPage, $this->method);
     }
 }

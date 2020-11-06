@@ -87,6 +87,8 @@ class QueryBuilder extends DB {
                 $placeholders[":" .  preg_replace('/["\']/', '', $value)] = $value;
             }
         }
+        dd($this->query);
+
 
         $this->query .= ' ' . $this->whereClause;
         try {
@@ -101,6 +103,7 @@ class QueryBuilder extends DB {
                 session('db_error', 'Ошибка подключения. Попробуйте позже', true);
             }
         }
+
         $stmt->execute($placeholders);
 
     }
@@ -281,7 +284,24 @@ class QueryBuilder extends DB {
         return $this->stmt->fetchAll();
     }
 
+    public static function findLast() {
+        $query = 'SELECT * FROM `users` ORDER BY user_id DESC LIMIT 1';
 
+        try {
+            $stmt = self::$db->prepare($query);
+            $stmt->execute();
+            //code...
+
+        } catch (Throwable $e) {
+            //throw $th;
+            if(request()->isJson()) {
+                response()->json(['status' => 'failed', 'message' => 'Ошибка подключения. Попробуйте позже']);
+            } else {
+                session('db_error', 'Ошибка подключения. Попробуйте позже', true);
+            }
+        }
+        return $stmt->fetch();
+    } 
 
 
 }
